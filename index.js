@@ -1,7 +1,20 @@
 const keywords = [];
+const keywordsDiv = document.querySelector('#keywords')
+const input = document.querySelector('input')
+const keyWordUl = document.querySelector(".inputKeywordsHandle ul");
+const lis = document.querySelectorAll("li")
+
 
 let currentKeywords = [];
 
+const showKeywords = (keywords) => {
+  if (keywords.length > 0) {
+    const html = keywords.map(word => `
+  <p>${word}</p>
+  `).join('')
+    keywordsDiv.innerHTML = html
+  }
+}
 const keywordsCategories = [
   {
     name: 'Programmation',
@@ -36,7 +49,6 @@ const toggleKeyword = (keyword) => {
   } else {
     currentKeywords.push(keyword);
   }
-
   reloadArticles();
 };
 
@@ -58,6 +70,7 @@ const addNewKeyword = (label, keyword) => {
   }
 
   keywords.push(keyword);
+  showKeywords(keywords)
   currentKeywords.push(keyword);
 
   document.querySelector('.keywordsList').innerHTML += `
@@ -78,13 +91,11 @@ const reloadArticles = () => {
   // let filterTags = 
   const articlesToShow = data.articles;
   articlesToShow
-    .filter(article => article.tags.filter(value => currentKeywords.includes(value)).length > 0)
+    .filter(article => article.tags.filter(tag => currentKeywords.includes(tag)).length > 0)
     .forEach((article) => {
       document.querySelector('.articlesList').innerHTML += `
             <article>
                 <h2>${article.titre}</h2>
-                <small>${article.tags}</small>
-
             </article>
         `;
     });
@@ -122,24 +133,16 @@ const cleanedKeyword = (keyword) => {
 // TODO: We also show all the words from the same category than this word.
 // TODO: We show in first the keyword containing a part of the word inserted.
 // TODO: If a keyword is already in the list of presents hashtags (checkbox list), we don't show it.
-const showKeywordsList = (value) => {
-  // Starting at 3 letters inserted in the form, we do something
-  if (value.length >= 3) {
-    const keyWordUl = document.querySelector(".inputKeywordsHandle ul");
-    keyWordUl.innerHTML += `<li>${allKeywords.filter(keyword => keyword)}</li>`;
-    resetKeywordsUl();
-
-    // This will allow you to add a new element in the list under the text input
-    // On click, we add the keyword, like so:
-    // keyWordUl.innerHTML += `
-    //    <li onclick="addNewKeyword(`${keyword}`, `${cleanedKeyword(keyword)}`)">${keyword}</li>
-
-    // EDIT JO  :  
+// const showKeywordsList = (value) => {
+// Starting at 3 letters inserted in the form, we do something
 
 
-    // `;
-  }
-};
+// This will allow you to add a new element in the list under the text input
+// On click, we add the keyword, like so:
+// keyWordUl.innerHTML += `
+//    <li onclick="addNewKeyword(`${keyword}`, `${cleanedKeyword(keyword)}`)">${keyword}</li>
+// `;
+
 
 // Once the DOM (you will se what is it next week) is loaded, we get back our form and
 // we prevent the initial behavior of the navigator: reload the page when it's submitted.
@@ -154,12 +157,76 @@ window.addEventListener('DOMContentLoaded', () => {
     addNewKeyword(keywordInputValue, cleanedKeyword(keywordInputValue));
   });
 
-  inputElement.addEventListener('input', (e) => {
-    const { value } = e.currentTarget;
-    showKeywordsList(value);
-  });
+  // inputElement.addEventListener('input', (e) => {
+  //   const { value } = e.currentTarget;
+  //   showKeywordsList(value);
+  // });
 
   data.articles.forEach((article) => {
     addNewArticle(article);
   });
 });
+
+
+const searchKeyword = word => {
+  let matches = allKeywords.filter(keyword => {
+    const regex = new RegExp(`^${word}`, 'gi')
+    return keyword.match(regex)
+  })
+
+  if (matches.length === 1) {
+    let matchKeywords = keywordsCategories.filter(category => {
+      return category.keywords.includes(matches[0])
+    })[0].keywords.filter(keyword => keyword !== matches[0])
+
+    matches = [...matches, ...matchKeywords]
+    console.log(matches)
+    outputHtml(matches)
+  }
+}
+
+const outputHtml = matches => {
+  // resetKeywordsUl();
+
+  if (matches.length > 0) {
+    const html = matches.map(match => `<li>${match}</li>`).join('')
+    keyWordUl.innerHTML = html
+  }
+  else {
+    keyWordUl.innerHTML = ''
+  }
+}
+
+
+
+input.addEventListener('input', () => {
+  if (input.value.length > 2)
+    searchKeyword(input.value)
+  else {
+    keyWordUl.innerHTML = ''
+  }
+})
+
+
+window.addEventListener('click', () => {
+  keyWordUl.innerHTML = ''
+})
+
+window.addEventListener('DOMContentLoaded', () => console.log(lis))
+
+
+lis.forEach(li => li.addEventListener('click', () => console.log('hello')))
+
+
+
+
+
+
+
+
+// keywords.push(li.textContent)
+    // console.log("liste des kw")
+    // console.log(keywords)
+    // reloadArticles()
+
+
