@@ -75,10 +75,10 @@ const addNewKeyword = (label, keyword) => {
 // TODO: Modify this function to display only articles that contain at least one of the selected keywords.
 const reloadArticles = () => {
   document.querySelector('.articlesList').innerHTML = '';
-
+  // let filterTags = 
   const articlesToShow = data.articles;
   articlesToShow
-    .filter(article => (article.tags.includes(currentKeywords[0]) || article.tags.includes(currentKeywords[1]) || article.tags.includes(currentKeywords[2]) || article.tags.includes(currentKeywords[3])))
+    .filter(article => article.tags.filter(value => currentKeywords.includes(value)).length > 0)
     .forEach((article) => {
       document.querySelector('.articlesList').innerHTML += `
             <article>
@@ -126,6 +126,7 @@ const showKeywordsList = (value) => {
   // Starting at 3 letters inserted in the form, we do something
   if (value.length >= 3) {
     const keyWordUl = document.querySelector(".inputKeywordsHandle ul");
+    keyWordUl.innerHTML += `<li>${allKeywords.filter(keyword => keyword)}</li>`;
     resetKeywordsUl();
 
     // This will allow you to add a new element in the list under the text input
@@ -134,7 +135,7 @@ const showKeywordsList = (value) => {
     //    <li onclick="addNewKeyword(`${keyword}`, `${cleanedKeyword(keyword)}`)">${keyword}</li>
 
     // EDIT JO  :  
-    // keyWordUl.innerHTML += `<li>${allKeywords.filter(keyword => keyword)}</li>`;
+
 
     // `;
   }
