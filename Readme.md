@@ -9,3 +9,7 @@ Les articles / vidéos / formations se trouvent dans le fichier `data.js`.
 Dans le fichier `index.html` se trouve le template HTML initial à utiliser.
 
 Quelques fonctions sont déjà présentes dans le fichier `index.js`, il ne reste plus qu'à terminer certaines fonctions contenant des TODOs&nbsp;!
+
+
+###EDIT JO : 
+tutoriel autocomplete:  https://www.youtube.com/watch?v=1iysNUrI3lw
